@@ -136,3 +136,38 @@ SELECT A.NAME FROM CITY AS A INNER JOIN COUNTRY AS B ON A.COUNTRYCODE = B.CODE W
 SELECT B.CONTINENT, FLOOR(AVG(A.POPULATION)) FROM CITY AS A INNER JOIN COUNTRY AS B ON A.COUNTRYCODE = B.CODE GROUP BY B.CONTINENT;
 
 
+-- We define an employee's total earnings to be their monthly salary x months worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee table. Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings. Then print these values as 2 space-separated integers.
+SELECT MAX(total_earnings) AS max_total_earnings,
+       COUNT(*) AS num_employees
+FROM (
+    SELECT (salary * months_worked) AS total_earnings
+    FROM Employee
+) AS earnings
+WHERE total_earnings = (SELECT MAX(salary * months_worked) FROM Employee);
+
+
+-- P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
+-- * * * * * 
+-- * * * * 
+-- * * * 
+-- * * 
+-- *
+-- Write a query to print the pattern P(20).
+WITH RECURSIVE Pattern AS (
+    SELECT 20 AS level, REPEAT('* ', 20) AS line
+    UNION ALL
+    SELECT level - 1, REPEAT('* ', level - 1)
+    FROM Pattern
+    WHERE level > 1
+)
+SELECT line
+FROM Pattern;
+
+
+-- P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
+-- * 
+-- * * 
+-- * * * 
+-- * * * * 
+-- * * * * *
+-- Write a query to print the pattern P(20).

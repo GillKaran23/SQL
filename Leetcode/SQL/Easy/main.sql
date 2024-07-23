@@ -275,4 +275,63 @@ SELECT
             LIMIT 1
         )
         ELSE null
-    END AS num;
+END AS num;
+
+
+-- Table: Department
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | id          | int     |
+-- | revenue     | int     |
+-- | month       | varchar |
+-- +-------------+---------+
+-- In SQL,(id, month) is the primary key of this table.
+-- The table has information about the revenue of each department per month.
+-- The month has values in ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].
+-- Reformat the table such that there is a department id column and a revenue column for each month.
+SELECT
+    id,
+    MAX(CASE WHEN month = 'Jan' THEN revenue ELSE NULL END) AS Jan_Revenue,
+    MAX(CASE WHEN month = 'Feb' THEN revenue ELSE NULL END) AS Feb_Revenue,
+    MAX(CASE WHEN month = 'Mar' THEN revenue ELSE NULL END) AS Mar_Revenue,
+    MAX(CASE WHEN month = 'Apr' THEN revenue ELSE NULL END) AS Apr_Revenue,
+    MAX(CASE WHEN month = 'May' THEN revenue ELSE NULL END) AS May_Revenue,
+    MAX(CASE WHEN month = 'Jun' THEN revenue ELSE NULL END) AS Jun_Revenue,
+    MAX(CASE WHEN month = 'Jul' THEN revenue ELSE NULL END) AS Jul_Revenue,
+    MAX(CASE WHEN month = 'Aug' THEN revenue ELSE NULL END) AS Aug_Revenue,
+    MAX(CASE WHEN month = 'Sep' THEN revenue ELSE NULL END) AS Sep_Revenue,
+    MAX(CASE WHEN month = 'Oct' THEN revenue ELSE NULL END) AS Oct_Revenue,
+    MAX(CASE WHEN month = 'Nov' THEN revenue ELSE NULL END) AS Nov_Revenue,
+    MAX(CASE WHEN month = 'Dec' THEN revenue ELSE NULL END) AS Dec_Revenue
+FROM Department
+GROUP BY id;
+
+
+
+-- Table: Users
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | id            | int     |
+-- | name          | varchar |
+-- +---------------+---------+
+-- id is the column with unique values for this table.
+-- name is the name of the user.
+-- Table: Rides
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | id            | int     |
+-- | user_id       | int     |
+-- | distance      | int     |
+-- +---------------+---------+
+-- id is the column with unique values for this table.
+-- user_id is the id of the user who traveled the distance "distance".
+-- Write a solution to report the distance traveled by each user.
+-- Return the result table ordered by travelled_distance in descending order, if two or more users traveled the same distance, order them by their name in ascending order.
+SELECT A.name, COALESCE(SUM(B.distance), 0) AS travelled_distance
+FROM Users AS A 
+LEFT JOIN Rides AS B ON A.id = B.user_id 
+GROUP BY A.id, A.name
+ORDER BY travelled_distance DESC, A.name ASC;

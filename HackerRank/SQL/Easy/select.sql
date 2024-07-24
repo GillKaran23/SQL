@@ -82,7 +82,7 @@ SELECT name FROM Employee WHERE salary > 2000 AND months < 10 ORDER BY employee_
 
 
 
--- Advance SELECT
+
 
 
 -- Write a query identifying the type of each record in the TRIANGLES table using its three side lengths. Output one of the following statements for each record in the table:
@@ -165,9 +165,28 @@ FROM Pattern;
 
 
 -- P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
--- * 
+-- *  
 -- * * 
 -- * * * 
 -- * * * * 
 -- * * * * *
 -- Write a query to print the pattern P(20).
+WITH RECURSIVE PatternCTE AS (
+    SELECT 1 AS RowNumber, CAST('* ' AS CHAR(1000)) AS Pattern
+    UNION ALL
+    SELECT RowNumber + 1, CONCAT(Pattern, '* ')
+    FROM PatternCTE
+    WHERE RowNumber < 20
+)
+SELECT Pattern
+FROM PatternCTE;
+
+
+-- Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than  and less than . Truncate your answer to  decimal places.
+SELECT TRUNCATE(SUM(LAT_N), 4) FROM STATION WHERE LAT_N > 38.7880 AND LAT_N < 137.2345;
+
+
+-- Query the greatest value of the Northern Latitudes (LAT_N) from STATION that is less than . Truncate your answer to  decimal places.
+SELECT TRUNCATE(MAX(LAT_N),4) FROM STATION WHERE LAT_N<137.2345;
+
+

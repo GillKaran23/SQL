@@ -121,3 +121,25 @@ WHERE w1.temperature > w2.temperature;
 -- There is a factory website that has several machines each running the same number of processes. Write a solution to find the average time each machine takes to complete a process.
 -- The time to complete a process is the 'end' timestamp minus the 'start' timestamp. The average time is calculated by the total time to complete every process on the machine divided by the number of processes that were run.
 -- The resulting table should have the machine_id along with the average time as processing_time, which should be rounded to 3 decimal places.
+WITH ProcessTimes AS (
+    SELECT 
+        machine_id,
+        process_id,
+        MAX(CASE WHEN activity_type = 'end' THEN timestamp ELSE NULL END) - 
+        MIN(CASE WHEN activity_type = 'start' THEN timestamp ELSE NULL END) AS processing_time
+    FROM Activity
+    GROUP BY machine_id, process_id
+),
+MachineAverageTimes AS (
+    SELECT 
+        machine_id,
+        AVG(processing_time) AS avg_processing_time
+    FROM ProcessTimes
+    GROUP BY machine_id
+)
+SELECT 
+    machine_id,
+    ROUND(avg_processing_time, 3) AS processing_time
+FROM MachineAverageTimes;
+
+

@@ -143,6 +143,7 @@ SELECT
 FROM MachineAverageTimes;
 
 
+-- 6 Question
 -- Table: Employee
 -- +-------------+---------+
 -- | Column Name | Type    |

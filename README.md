@@ -6,6 +6,6 @@ Welcome to my SQL practice repository! This is where I document my journey of im
 
 The goal of this repository is to:
 
-- Improve my SQL skills.
+- Improve the SQL skills.
 - Solve at least one SQL question daily from both HackerRank and Leetcode.
-- Track my progress and keep a record of the solutions.
+- Track the progress and keep a record of the solutions.

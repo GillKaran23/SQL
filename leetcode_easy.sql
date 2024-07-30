@@ -408,19 +408,16 @@ SELECT * FROM Patients WHERE conditions LIKE '% DIAB1%' OR conditions LIKE 'DIAB
 SELECT query_name,  ROUND(SUM(rating/position)/COUNT(*),2)AS quality,ROUND((SUM(CASE WHEN rating < 3 THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS poor_query_percentage FROM Queries WHERE query_name IS NOT NULL GROUP BY query_name;
 
 
-Table: Users
-
-+--------------+---------+
-| Column Name  | Type    |
-+--------------+---------+
-| account      | int     |
-| name         | varchar |
-+--------------+---------+
-account is the primary key (column with unique values) for this table.
-Each row of this table contains the account number of each user in the bank.
-There will be no two users having the same name in the table.
- 
-
+-- Table: Users
+-- +--------------+---------+
+-- | Column Name  | Type    |
+-- +--------------+---------+
+-- | account      | int     |
+-- | name         | varchar |
+-- +--------------+---------+
+-- account is the primary key (column with unique values) for this table.
+-- Each row of this table contains the account number of each user in the bank.
+-- There will be no two users having the same name in the table.
 -- Table: Transactions
 -- +---------------+---------+
 -- | Column Name   | Type    |

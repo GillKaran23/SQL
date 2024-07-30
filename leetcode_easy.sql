@@ -356,3 +356,86 @@ SELECT x, y, z,
     END AS triangle
 FROM 
     Triangle;
+
+
+-- Table: Courses
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | student     | varchar |
+-- | class       | varchar |
+-- +-------------+---------+
+-- (student, class) is the primary key (combination of columns with unique values) for this table.
+-- Each row of this table indicates the name of a student and the class in which they are enrolled.
+-- Write a solution to find all the classes that have at least five students.
+SELECT class FROM Courses GROUP BY class HAVING COUNT(*) >= 5;
+
+
+-- Table: Patients
+-- +--------------+---------+
+-- | Column Name  | Type    |
+-- +--------------+---------+
+-- | patient_id   | int     |
+-- | patient_name | varchar |
+-- | conditions   | varchar |
+-- +--------------+---------+
+-- patient_id is the primary key (column with unique values) for this table.
+-- 'conditions' contains 0 or more code separated by spaces. 
+-- This table contains information of the patients in the hospital.
+-- Write a solution to find the patient_id, patient_name, and conditions of the patients who have Type I Diabetes. Type I Diabetes always starts with DIAB1 prefix.
+SELECT * FROM Patients WHERE conditions LIKE '% DIAB1%' OR conditions LIKE 'DIAB1%';
+
+
+-- Table: Queries
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | query_name  | varchar |
+-- | result      | varchar |
+-- | position    | int     |
+-- | rating      | int     |
+-- +-------------+---------+
+-- This table may have duplicate rows.
+-- This table contains information collected from some queries on a database.
+-- The position column has a value from 1 to 500.
+-- The rating column has a value from 1 to 5. Query with rating less than 3 is a poor query.
+-- We define query quality as:
+-- The average of the ratio between query rating and its position.
+-- We also define poor query percentage as:
+-- The percentage of all queries with rating less than 3.
+-- Write a solution to find each query_name, the quality and poor_query_percentage.
+-- Both quality and poor_query_percentage should be rounded to 2 decimal places.
+SELECT query_name,  ROUND(SUM(rating/position)/COUNT(*),2)AS quality,ROUND((SUM(CASE WHEN rating < 3 THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS poor_query_percentage FROM Queries WHERE query_name IS NOT NULL GROUP BY query_name;
+
+
+Table: Users
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| account      | int     |
+| name         | varchar |
++--------------+---------+
+account is the primary key (column with unique values) for this table.
+Each row of this table contains the account number of each user in the bank.
+There will be no two users having the same name in the table.
+ 
+
+-- Table: Transactions
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | trans_id      | int     |
+-- | account       | int     |
+-- | amount        | int     |
+-- | transacted_on | date    |
+-- +---------------+---------+
+-- trans_id is the primary key (column with unique values) for this table.
+-- Each row of this table contains all changes made to all accounts.
+-- amount is positive if the user received money and negative if they transferred money.
+-- All accounts start with a balance of 0.
+-- Write a solution to report the name and balance of users with a balance higher than 10000. The balance of an account is equal to the sum of the amounts of all transactions involving that account.
+SELECT A.name AS NAME, 
+       SUM(B.amount) AS BALANCE 
+FROM Users AS A 
+LEFT JOIN Transactions AS B ON A.account = B.account GROUP BY A.name HAVING SUM(B.amount) > 10000 ;

@@ -436,3 +436,92 @@ SELECT A.name AS NAME,
        SUM(B.amount) AS BALANCE 
 FROM Users AS A 
 LEFT JOIN Transactions AS B ON A.account = B.account GROUP BY A.name HAVING SUM(B.amount) > 10000 ;
+
+
+-- Table: Followers
+-- +-------------+------+
+-- | Column Name | Type |
+-- +-------------+------+
+-- | user_id     | int  |
+-- | follower_id | int  |
+-- +-------------+------+
+-- (user_id, follower_id) is the primary key (combination of columns with unique values) for this table.
+-- This table contains the IDs of a user and a follower in a social media app where the follower follows the user.
+-- Write a solution that will, for each user, return the number of followers.
+-- Return the result table ordered by user_id in ascending order.
+SELECT user_id, COUNT(follower_id) AS followers_count FROM Followers GROUP BY user_id ORDER BY (user_id) ASC;
+
+
+-- Table: Users
+-- +----------------+---------+
+-- | Column Name    | Type    |
+-- +----------------+---------+
+-- | user_id        | int     |
+-- | name           | varchar |
+-- +----------------+---------+
+-- user_id is the primary key (column with unique values) for this table.
+-- This table contains the ID and the name of the user. The name consists of only lowercase and uppercase characters.
+-- Write a solution to fix the names so that only the first character is uppercase and the rest are lowercase.
+-- Return the result table ordered by user_id.
+SELECT user_id, CONCAT(UPPER(LEFT(name, 1)), LOWER(SUBSTRING(name, 2))) AS name FROM Users GROUP BY user_id ORDER BY user_id ASC;
+
+
+-- Table: Product
+-- +--------------+---------+
+-- | Column Name  | Type    |
+-- +--------------+---------+
+-- | product_id   | int     |
+-- | product_name | varchar |
+-- | unit_price   | int     |
+-- +--------------+---------+
+-- product_id is the primary key (column with unique values) of this table.
+-- Each row of this table indicates the name and the price of each product.
+-- Table: Sales
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | seller_id   | int     |
+-- | product_id  | int     |
+-- | buyer_id    | int     |
+-- | sale_date   | date    |
+-- | quantity    | int     |
+-- | price       | int     |
+-- +-------------+---------+
+-- This table can have duplicate rows.
+-- product_id is a foreign key (reference column) to the Product table.
+-- Each row of this table contains some information about one sale.
+-- Write a solution to report the products that were only sold in the first quarter of 2019. That is, between 2019-01-01 and 2019-03-31 inclusive.
+SELECT A.product_id, A.product_name 
+FROM Product AS A 
+JOIN Sales AS B ON A.product_id = B.product_id 
+GROUP BY A.product_id, A.product_name 
+HAVING 
+    MAX(B.sale_date) <= '2019-03-31' AND
+    MIN(B.sale_date) >= '2019-01-01';
+
+
+-- Table: Activity
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | user_id       | int     |
+-- | session_id    | int     |
+-- | activity_date | date    |
+-- | activity_type | enum    |
+-- +---------------+---------+
+-- This table may have duplicate rows.
+-- The activity_type column is an ENUM (category) of type ('open_session', 'end_session', 'scroll_down', 'send_message').
+-- The table shows the user activities for a social media website. 
+-- Note that each session belongs to exactly one user.
+-- Write a solution to find the daily active user count for a period of 30 days ending 2019-07-27 inclusively. A user was active on someday if they made at least one activity on that day.
+SELECT 
+    activity_date AS day,
+    COUNT(DISTINCT user_id) AS active_users
+FROM 
+    Activity
+WHERE 
+    activity_date BETWEEN DATE('2019-06-28') AND DATE('2019-07-27')
+GROUP BY 
+    activity_date
+ORDER BY 
+    activity_date;

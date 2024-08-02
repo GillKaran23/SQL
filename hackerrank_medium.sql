@@ -63,3 +63,7 @@ FROM students AS A
 INNER JOIN grades AS B
 ON A.marks >= B.min_mark AND A.marks <= B.max_mark
 ORDER BY B.grade DESC, A.name ASC;
+
+
+-- A median is defined as a number separating the higher half of a data set from the lower half. Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to 4 decimal places.
+Select round(S.LAT_N,4) from station AS S where (select count(Lat_N) from station where Lat_N < S.LAT_N ) = (select count(Lat_N) from station where Lat_N > S.LAT_N);

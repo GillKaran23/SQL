@@ -87,3 +87,51 @@ FROM Activities AS A
 GROUP BY A.sell_date
 ORDER BY A.sell_date;
 
+
+-- 6 Question
+-- Table: Products
+-- +------------------+---------+
+-- | Column Name      | Type    |
+-- +------------------+---------+
+-- | product_id       | int     |
+-- | product_name     | varchar |
+-- | product_category | varchar |
+-- +------------------+---------+
+-- product_id is the primary key (column with unique values) for this table.
+-- This table contains data about the company's products.
+-- Table: Orders
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | product_id    | int     |
+-- | order_date    | date    |
+-- | unit          | int     |
+-- +---------------+---------+
+-- This table may have duplicate rows.
+-- product_id is a foreign key (reference column) to the Products table.
+-- unit is the number of products ordered in order_date.
+-- Write a solution to get the names of products that have at least 100 units ordered in February 2020 and their amount.
+SELECT A.product_name, SUM(B.unit) AS unit 
+FROM Products AS A 
+JOIN Orders AS B ON A.product_id = B.product_id 
+WHERE B.order_date LIKE '2020-02-%' 
+GROUP BY A.product_name 
+HAVING SUM(B.unit) >= 100;
+
+
+-- 7 Question
+-- Table: Users
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | user_id       | int     |
+-- | name          | varchar |
+-- | mail          | varchar |
+-- +---------------+---------+
+-- user_id is the primary key (column with unique values) for this table.
+-- This table contains information of the users signed up in a website. Some e-mails are invalid.
+-- Write a solution to find the users who have valid emails.
+-- A valid e-mail has a prefix name and a domain where:
+-- The prefix name is a string that may contain letters (upper or lower case), digits, underscore '_', period '.', and/or dash '-'. The prefix name must start with a letter.
+-- The domain is '@leetcode.com'.
+SELECT * FROM Users WHERE mail REGEXP '^[A-Za-z][A-Za-z0-9._-]*@leetcode\\.com$';

@@ -608,3 +608,55 @@ SELECT employee_id FROM Employees WHERE employee_id NOT IN (SELECT employee_id F
 UNION ALL
 SELECT employee_id FROM Salaries WHERE employee_id NOT IN (SELECT employee_id FROM Employees)
 ORDER BY employee_id;
+
+
+-- Table: Employees
+-- +-------------+----------+
+-- | Column Name | Type     |
+-- +-------------+----------+
+-- | employee_id | int      |
+-- | name        | varchar  |
+-- | manager_id  | int      |
+-- | salary      | int      |
+-- +-------------+----------+
+-- In SQL, employee_id is the primary key for this table.
+-- This table contains information about the employees, their salary, and the ID of their manager. Some employees do not have a manager (manager_id is null). 
+-- Find the IDs of the employees whose salary is strictly less than $30000 and whose manager left the company. When a manager leaves the company, their information is deleted from the Employees table, but the reports still have their manager_id set to the manager that left.
+-- Return the result table ordered by employee_id.
+SELECT employee_id FROM Employees WHERE manager_id NOT IN(SELECT employee_id FROM Employees) AND salary<30000 ORDER BY employee_id;
+
+
+-- Table: Employees
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | employee_id | int     |
+-- | name        | varchar |
+-- | salary      | int     |
+-- +-------------+---------+
+-- employee_id is the primary key (column with unique values) for this table.
+-- Each row of this table indicates the employee ID, employee name, and salary.
+-- Write a solution to calculate the bonus of each employee. The bonus of an employee is 100% of their salary if the ID of the employee is an odd number and the employee's name does not start with the character 'M'. The bonus of an employee is 0 otherwise.
+-- Return the result table ordered by employee_id.
+SELECT employee_id, CASE 
+WHEN name LIKE 'M%' THEN 0
+WHEN employee_id %2= 0 THEN 0
+ELSE salary END AS bonus FROM Employees ORDER BY employee_id;
+
+
+-- Table: Employees
+-- +-------------+------+
+-- | Column Name | Type |
+-- +-------------+------+
+-- | emp_id      | int  |
+-- | event_day   | date |
+-- | in_time     | int  |
+-- | out_time    | int  |
+-- +-------------+------+
+-- (emp_id, event_day, in_time) is the primary key (combinations of columns with unique values) of this table.
+-- The table shows the employees' entries and exits in an office.
+-- event_day is the day at which this event happened, in_time is the minute at which the employee entered the office, and out_time is the minute at which they left the office.
+-- in_time and out_time are between 1 and 1440.
+-- It is guaranteed that no two events on the same day intersect in time, and in_time < out_time.
+-- Write a solution to calculate the total time in minutes spent by each employee on each day at the office. Note that within one day, an employee can enter and leave more than once. The time spent in the office for a single entry is out_time - in_time.
+SELECT event_day AS day, emp_id, SUM(out_time - in_time) AS total_time FROM Employees GROUP BY event_day, emp_id;

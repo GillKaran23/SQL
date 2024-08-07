@@ -71,3 +71,55 @@ ON A.product_id = B.product_id AND A.year = B.first_year;
 SELECT score, DENSE_RANK() OVER (ORDER BY score DESC) AS 'rank' FROM Scores ORDER BY score DESC;
 
 
+-- Table: Movies
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | movie_id      | int     |
+-- | title         | varchar |
+-- +---------------+---------+
+-- movie_id is the primary key (column with unique values) for this table.
+-- title is the name of the movie.
+-- Table: Users
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | user_id       | int     |
+-- | name          | varchar |
+-- +---------------+---------+
+-- user_id is the primary key (column with unique values) for this table.
+-- Table: MovieRating
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | movie_id      | int     |
+-- | user_id       | int     |
+-- | rating        | int     |
+-- | created_at    | date    |
+-- +---------------+---------+
+-- (movie_id, user_id) is the primary key (column with unique values) for this table.
+-- This table contains the rating of a movie by a user in their review.
+-- created_at is the user's review date. 
+-- Write a solution to:
+-- Find the name of the user who has rated the greatest number of movies. In case of a tie, return the lexicographically smaller user name.
+-- Find the movie name with the highest average rating in February 2020. In case of a tie, return the lexicographically smaller movie name.
+SELECT results
+FROM (
+  SELECT B.name AS results
+  FROM MovieRating AS A
+  JOIN users AS B ON A.user_id = B.user_id
+  GROUP BY B.name
+  ORDER BY COUNT(A.rating) DESC, name
+  LIMIT 1 
+  ) AS ratings
+UNION ALL
+SELECT results 
+FROM (
+  SELECT C.title AS results
+  FROM MovieRating D
+  JOIN Movies AS C ON D.movie_id = C.movie_id 
+  WHERE DATE_FORMAT(D.created_at, "%Y-%m") = '2020-02'
+  GROUP BY C.title
+  ORDER BY AVG(D.rating) DESC, C.title 
+  LIMIT 1
+) movie_ratings

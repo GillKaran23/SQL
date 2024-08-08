@@ -135,3 +135,21 @@ HAVING SUM(B.unit) >= 100;
 -- The prefix name is a string that may contain letters (upper or lower case), digits, underscore '_', period '.', and/or dash '-'. The prefix name must start with a letter.
 -- The domain is '@leetcode.com'.
 SELECT * FROM Users WHERE mail REGEXP '^[A-Za-z][A-Za-z0-9._-]*@leetcode\\.com$';
+
+
+-- 8 Question
+-- Table: Logs
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | id          | int     |
+-- | num         | varchar |
+-- +-------------+---------+
+-- In SQL, id is the primary key for this table.
+-- id is an autoincrement column.
+-- Find all numbers that appear at least three times consecutively.
+SELECT DISTINCT B.num AS ConsecutiveNums
+FROM
+    Logs AS A
+    JOIN Logs AS B ON A.id = B.id - 1 AND A.num = B.num
+    JOIN Logs AS C ON B.id = C.id - 1 AND B.num = C.num;

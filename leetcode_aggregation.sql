@@ -125,3 +125,27 @@ SELECT contest_id,ROUND(COUNT(user_id) * 100.0 / (SELECT COUNT(*) FROM Users), 2
 SELECT query_name,  ROUND(SUM(rating/position)/COUNT(*),2)AS quality,ROUND((SUM(CASE WHEN rating < 3 THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS poor_query_percentage FROM Queries WHERE query_name IS NOT NULL GROUP BY query_name;
 
 
+-- 6 Question
+-- Table: Transactions
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | id            | int     |
+-- | country       | varchar |
+-- | state         | enum    |
+-- | amount        | int     |
+-- | trans_date    | date    |
+-- +---------------+---------+
+-- id is the primary key of this table.
+-- The table has information about incoming transactions.
+-- The state column is an enum of type ["approved", "declined"].
+-- Write an SQL query to find for each month and country, the number of transactions and their total amount, the number of approved transactions and their total amount.
+SELECT
+  DATE_FORMAT(trans_date, '%Y-%m') AS month,
+  country,
+  COUNT(*) AS trans_count,
+  SUM(state = 'approved') AS approved_count,
+  SUM(amount) AS trans_total_amount,
+  SUM(IF(state = 'approved', amount, 0)) AS approved_total_amount
+FROM Transactions
+GROUP BY month, country;

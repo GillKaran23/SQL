@@ -167,7 +167,7 @@ GROUP BY month, country;
 -- The first order of a customer is the order with the earliest order date that the customer made. It is guaranteed that a customer has precisely one first order.
 -- Write a solution to find the percentage of immediate orders in the first orders of all customers, rounded to 2 decimal places.
 SELECT 
-ROUND(100*SUM(case when B.min_order_date = B.min_delivery_date THEN 1 ELSE 0 END)/COUNT(*), 2)
+ROUND(100*SUM(CASE WHEN B.min_order_date = B.min_delivery_date THEN 1 ELSE 0 END)/COUNT(*), 2)
 AS immediate_percentage
 FROM (
   SELECT MIN(order_date) AS min_order_date, MIN(customer_pref_delivery_date) AS min_delivery_date

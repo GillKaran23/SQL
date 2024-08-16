@@ -93,6 +93,32 @@ FROM
     JOIN Logs AS C ON B.id = C.id - 1 AND B.num = C.num;
 
 
+-- 5 Question
+-- Table: Products
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | product_id    | int     |
+-- | new_price     | int     |
+-- | change_date   | date    |
+-- +---------------+---------+
+-- (product_id, change_date) is the primary key (combination of columns with unique values) of this table.
+-- Each row of this table indicates that the price of some product was changed to a new price at some date.
+-- Write a solution to find the prices of all products on 2019-08-16. Assume the price of all products before any change is 10.
+SELECT
+product_id,
+First_value(new_price) OVER(PARTITION BY product_id ORDER BY change_date DESC) AS price
+FROM Products
+WHERE change_date <= '2019-08-16'
+UNION
+SELECT
+product_id,
+10 AS price
+FROM products
+GROUP BY product_id
+HAVING MIN(change_date)> '2019-08-16'
+
+
 -- 7 Question
 -- Table: Accounts
 -- +-------------+------+

@@ -90,4 +90,31 @@ FROM (
   GROUP BY C.title
   ORDER BY AVG(D.rating) DESC, C.title 
   LIMIT 1
-) movie_ratings
+) movie_ratings;
+
+
+-- 4 Question
+-- Table: Customer
+-- +---------------+---------+
+-- | Column Name   | Type    |
+-- +---------------+---------+
+-- | customer_id   | int     |
+-- | name          | varchar |
+-- | visited_on    | date    |
+-- | amount        | int     |
+-- +---------------+---------+
+-- In SQL,(customer_id, visited_on) is the primary key for this table.
+-- This table contains data about customer transactions in a restaurant.
+-- visited_on is the date on which the customer with ID (customer_id) has visited the restaurant.
+-- amount is the total paid by a customer.
+-- You are the restaurant owner and you want to analyze a possible expansion (there will be at least one customer every day).
+-- Compute the moving average of how much the customer paid in a seven days window (i.e., current day + 6 days before). average_amount should be rounded to two decimal places.
+-- Return the result table ordered by visited_on in ascending order.
+SELECT A.visited_on, 
+    SUM(B.amount) amount,
+    ROUND(SUM(B.amount)/7,2) average_amount
+FROM (SELECT visited_on, SUM(amount) amount FROM Customer GROUP BY visited_on) A, 
+    (SELECT visited_on, SUM(amount) amount FROM Customer GROUP BY visited_on) B 
+WHERE DATEDIFF(A.visited_on, B.visited_on) BETWEEN 0 AND 6
+GROUP BY A.visited_on
+HAVING COUNT(DISTINCT B.visited_on) = 7;

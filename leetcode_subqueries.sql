@@ -143,3 +143,76 @@ FROM   (SELECT requester_id AS id
 GROUP  BY id
 ORDER  BY Count(id) DESC
 LIMIT  1;
+
+
+-- 6 Question
+-- Table: Insurance
+-- +-------------+-------+
+-- | Column Name | Type  |
+-- +-------------+-------+
+-- | pid         | int   |
+-- | tiv_2015    | float |
+-- | tiv_2016    | float |
+-- | lat         | float |
+-- | lon         | float |
+-- +-------------+-------+
+-- pid is the primary key (column with unique values) for this table.
+-- Each row of this table contains information about one policy where:
+-- pid is the policyholder's policy ID.
+-- tiv_2015 is the total investment value in 2015 and tiv_2016 is the total investment value in 2016.
+-- lat is the latitude of the policy holder's city. It's guaranteed that lat is not NULL.
+-- lon is the longitude of the policy holder's city. It's guaranteed that lon is not NULL.
+-- Write a solution to report the sum of all total investment values in 2016 tiv_2016, for all policyholders who:
+-- have the same tiv_2015 value as one or more other policyholders, and
+-- are not located in the same city as any other policyholder (i.e., the (lat, lon) attribute pairs must be unique).
+-- Round tiv_2016 to two decimal places.
+SELECT ROUND(SUM(tiv_2016),2) AS tiv_2016
+FROM insurance
+WHERE tiv_2015 IN
+(
+  SELECT tiv_2015 
+  FROM insurance
+  GROUP BY 1
+  HAVING COUNT(*) > 1
+) AND CONCAT(lat, lon) IN
+(
+  SELECT CONCAT(lat, lon) 
+  FROM insurance
+  GROUP BY lat, lon
+  HAVING COUNT(*) = 1
+);
+
+
+-- 7 Question
+-- Table: Employee
+-- +--------------+---------+
+-- | Column Name  | Type    |
+-- +--------------+---------+
+-- | id           | int     |
+-- | name         | varchar |
+-- | salary       | int     |
+-- | departmentId | int     |
+-- +--------------+---------+
+-- id is the primary key (column with unique values) for this table.
+-- departmentId is a foreign key (reference column) of the ID from the Department table.
+-- Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+-- Table: Department
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | id          | int     |
+-- | name        | varchar |
+-- +-------------+---------+
+-- id is the primary key (column with unique values) for this table.
+-- Each row of this table indicates the ID of a department and its name.
+-- A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.
+-- Write a solution to find the employees who are high earners in each of the departments.
+-- Return the result table in any order.
+SELECT B.name AS Department, A.name AS Employee, A.salary AS Salary
+FROM Employee AS A 
+INNER JOIN Department AS B ON A.departmentId = B.id
+WHERE (
+    SELECT COUNT(DISTINCT C.salary) 
+    FROM Employee AS C
+    WHERE C.departmentId = A.departmentId AND C.salary > A.salary
+) < 3;

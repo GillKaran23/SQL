@@ -140,3 +140,8 @@ FROM (
 -- It is guaranteed that each 'Sell' operation for a stock has a corresponding 'Buy' operation in a previous day. It is also guaranteed that each 'Buy' operation for a stock has a corresponding 'Sell' operation in an upcoming day.
 -- Write a solution to report the Capital gain/loss for each stock.
 -- The Capital gain/loss of a stock is the total gain or loss after buying and selling the stock one or many times.
+SELECT stock_name,
+       SUM(CASE WHEN operation = 'Sell' THEN price ELSE 0 END) -
+       SUM(CASE WHEN operation = 'Buy' THEN price ELSE 0 END) AS capital_gain_loss
+FROM Stocks
+GROUP BY stock_name;

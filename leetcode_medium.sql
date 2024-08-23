@@ -174,3 +174,27 @@ JOIN Employee B
 ON B.departmentId = A.id
 WHERE (B.Salary, B.DepartmentId) IN (SELECT MAX(B.Salary), B.DepartmentId 
 FROM Employee B GROUP BY B.DepartmentId);
+
+
+-- Table: Tree
+-- +-------------+------+
+-- | Column Name | Type |
+-- +-------------+------+
+-- | id          | int  |
+-- | p_id        | int  |
+-- +-------------+------+
+-- id is the column with unique values for this table.
+-- Each row of this table contains information about the id of a node and the id of its parent node in a tree.
+-- The given structure is always a valid tree.
+-- Each node in the tree can be one of three types:
+-- "Leaf": if the node is a leaf node.
+-- "Root": if the node is the root of the tree.
+-- "Inner": If the node is neither a leaf node nor a root node.
+-- Write a solution to report the type of each node in the tree.
+SELECT
+id,
+CASE
+WHEN p_id IS NULL THEN 'Root'
+WHEN p_id IS NOT NULL AND id IN (SELECT DISTINCT p_id FROM tree) THEN 'Inner'
+ELSE 'Leaf' END AS Type
+FROM tree;

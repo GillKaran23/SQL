@@ -261,3 +261,23 @@ LEFT JOIN Orders B ON A.user_id = B.buyer_id
     AND B.order_date LIKE '%2019%'
 GROUP BY A.user_id, A.join_date
 ORDER BY A.user_id;
+
+
+-- Table: Employee
+-- +-------------+------+
+-- | Column Name | Type |
+-- +-------------+------+
+-- | id          | int  |
+-- | salary      | int  |
+-- +-------------+------+
+-- id is the primary key (column with unique values) for this table.
+-- Each row of this table contains information about the salary of an employee.
+-- Write a solution to find the nth highest salary from the Employee table. If there is no nth highest salary, return null.
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+DECLARE M INT;
+SET M = N - 1;
+  RETURN (
+      SELECT DISTINCT Salary FROM Employee ORDER by Salary DESC LIMIT M, 1
+  );
+END

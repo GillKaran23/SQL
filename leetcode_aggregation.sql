@@ -53,6 +53,7 @@ ON
 GROUP BY 
     p.product_id;
 
+
 --  3 Question
 -- Table: Project
 -- +-------------+---------+
@@ -151,7 +152,7 @@ FROM Transactions
 GROUP BY month, country;
 
 
-7 Question
+-- 7 Question
 -- Table: Delivery
 -- +-----------------------------+---------+
 -- | Column Name                 | Type    |
@@ -176,7 +177,7 @@ FROM (
 ) B;
 
 
-8 Question
+-- 8 Question
 -- Table: Activity
 -- +--------------+---------+
 -- | Column Name  | Type    |
